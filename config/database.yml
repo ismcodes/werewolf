@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  username: tom
+  password: myPassword
+  host: localhost
+  pool: 5
+  timeout: 5000
+
+development:
+  <<: *default
+  database: werewolf_development
+
+test:
+  <<: *default
+  database: werewolf_test
+
+production:
+  <<: *default
+  database: werewolf_production
+
