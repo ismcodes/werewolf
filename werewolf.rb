@@ -31,6 +31,7 @@ if body.include? "join"
 
 player = Player.where(phone_number:num).first
 player ||= Player.create(phone_number:num)
+return send_msg(num, "no game id supplied") unless /join (\d|[a-z]){5}/ =~ body
 game_id = body.split(" ")[1]
 s=Session.where(uuid:game_id).first
 if s
@@ -59,7 +60,7 @@ end
 
 elsif body.include? "host"
 
-s = Session.create(uuid:SecureRandom.uuid[0..5])
+s = Session.create(uuid:SecureRandom.uuid[0..4])
 player = Player.where(phone_number:num).first
 player ||= Player.create(phone_number:num)
 s.host = player
@@ -71,7 +72,8 @@ elsif body.include? "start"
 s = Session.find_by_host_number(num)
 return send_msg(num,"You are not the host") unless s
 all_players = s.players
-return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size+1 < 3
+all_players<<player #host can play too?
+return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size < 3
 special = [-1,-1,-1]
 3.times do |i|
 r = rand(all_players.count)
@@ -84,8 +86,8 @@ special[i] = r
 
 end
 
-all_players<<player
-#should the host also play?
+#should the host also play?all_players<<player
+
 
 all_players.each_with_index do |p,i|
 character = ""
@@ -104,11 +106,21 @@ end
 
 elsif body.include? "end"
 
-
-if Session.find_by_host_number(num).host.phone_number == num
-Session.where(uuid:game_id).destroy
+p= Player.where(phone_number:num).first
+if p
+if p.game.host.==p
+p.game.destroy
+return send_msg(num,"Successfully ended game")
+else
+return send_msg(num,"You're not the host of that game")
+end
+send_msg(num, "You're not the host of a game right now")
 end
 
+
+#end cases
 end
 
+
+#end routes
 end
