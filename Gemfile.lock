@@ -15,6 +15,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     arel (6.0.0)
+    bazaar (0.0.2)
     builder (3.2.2)
     faker (1.4.3)
       i18n (~> 0.5)
@@ -42,6 +43,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bazaar
   faker
   pg
   rake
