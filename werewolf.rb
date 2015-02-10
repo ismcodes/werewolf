@@ -36,9 +36,21 @@ game_id = body.split(" ")[1]
 Session.where(uuid:game_id).first.players << player
 
 if player.session
+if player.session.host != player
 send_msg(num, "Successfully joined game with #{player.session.players.size-1} other players.")
 else
 send_msg(num, "Could not join game with id of #{game_id}")
+end
+else
+send_msg(num, "Could not join game with id of #{game_id}")
+end
+
+elsif body.include? "status"
+s = Session.where(uuid:body.split(" ")[1])
+if s
+send_msg(num,"#{s.players.size} players")
+else
+send_msg(num,"game not found")
 end
 
 elsif body.include? "host"
