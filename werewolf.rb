@@ -97,13 +97,11 @@ send_msg(p.phone_number,character)
 end
 
 elsif body.include? "end"
-if session.host.==player
+if session.host==player
 session.destroy
 return send_msg(num,"Successfully ended game")
 else
 return send_msg(num,"You're not the host of that game")
-end
-send_msg(num, "You're not the host of a game right now")
 end
 
 
