@@ -68,7 +68,7 @@ s.host = player
 send_msg(num, "Created new game with id of #{s.uuid}")
 
 elsif body.include? "start"
-s = Session.find_by_host_phone(num)
+s = Session.find_by_host_number(num)
 return send_msg(num,"You are not the host") unless s
 all_players = s.players
 return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size < 3
@@ -104,9 +104,8 @@ end
 
 elsif body.include? "end"
 
-game_id = body.split(" ")[1]
 
-if Session.where(uuid:game_id).first.host.phone_number == num
+if Session.find_by_host_number(num).host.phone_number == num
 Session.where(uuid:game_id).destroy
 end
 
