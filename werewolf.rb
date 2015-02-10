@@ -32,8 +32,12 @@ if body.include? "join"
 player = Player.where(phone_number:num).first
 player ||= Player.create(phone_number:num)
 game_id = body.split(" ")[1]
-
-Session.where(uuid:game_id).first.players << player
+s=Session.where(uuid:game_id).first
+if s
+s.players << player
+else
+return send_msg(num, "Could not join game with id of #{game_id}")
+end
 
 if player.session
 if player.session.host != player
