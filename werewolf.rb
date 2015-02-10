@@ -29,7 +29,7 @@ body = params[:Body].downcase
 
 if body.include? "join"
 
-player = Player.find(num)
+player = Player.where(phone_number:num).first
 player ||= Player.create(phone_number:num)
 game_id = body.split(" ")[1]
 
@@ -44,7 +44,7 @@ end
 elsif body.include? "host"
 
 s = Session.create(uuid:SecureRandom.uuid[0..5])
-player = Player.find(num)
+player = Player.where(phone_number:num).first
 player ||= Player.create(phone_number:num)
 s.host = player
 
