@@ -8,11 +8,6 @@ end
 class Session < ActiveRecord::Base
 has_many :players
 has_one :host, class_name: 'Player'
-
-def self.find_by_host_number(num)
-self.all.map{|x|x if x.host.number==num}.first
-end
-
 end
 
 def send_msg(_to, content)
@@ -26,11 +21,13 @@ end
 post '/' do
 num = params[:From]
 body = params[:Body].downcase
+player = Player.where(phone_number:num).first
+player ||= Player.create(phone_number:num)
+session = player.session
+
 
 if body.include? "join"
 
-player = Player.where(phone_number:num).first
-player ||= Player.create(phone_number:num)
 return send_msg(num, "no game id supplied") unless /join (\d|[a-z]){5}/ =~ body
 game_id = body.split(" ")[1]
 s=Session.where(uuid:game_id).first
@@ -40,8 +37,8 @@ else
 return send_msg(num, "Could not join game with id of #{game_id}")
 end
 
-if player.session
-if player.session.host != player
+if session
+if session.host != player
 send_msg(num, "Successfully joined game with #{player.session.players.size-1} other players.")
 else
 send_msg(num, "Could not join game with id of #{game_id}")
@@ -51,7 +48,7 @@ send_msg(num, "Could not join game with id of #{game_id}")
 end
 
 elsif body.include? "status"
-s = Session.where(uuid:body.split(" ")[1]).first
+
 if s
 send_msg(num,"#{s.players.size} players")
 else
@@ -61,19 +58,17 @@ end
 elsif body.include? "host"
 
 s = Session.create(uuid:SecureRandom.uuid[0..4])
-player = Player.where(phone_number:num).first
-player ||= Player.create(phone_number:num)
 s.host = player
 
 #send text with uuid
 send_msg(num, "Created new game with id of #{s.uuid}")
 
 elsif body.include? "start"
-s = Session.find_by_host_number(num)
-return send_msg(num,"You are not the host") unless s
-all_players = s.players
+
+return send_msg(num,"You are not the host") unless session.host = player
+all_players = session.players
 all_players<<player #host can play too?
-return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size < 3
+return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if all_players.size<3
 special = [-1,-1,-1]
 3.times do |i|
 r = rand(all_players.count)
@@ -85,9 +80,6 @@ end
 special[i] = r
 
 end
-
-#should the host also play?all_players<<player
-
 
 all_players.each_with_index do |p,i|
 character = ""
@@ -105,11 +97,8 @@ send_msg(p.phone_number,character)
 end
 
 elsif body.include? "end"
-
-p= Player.where(phone_number:num).first
-if p
-if p.game.host.==p
-p.game.destroy
+if session.host.==player
+session.destroy
 return send_msg(num,"Successfully ended game")
 else
 return send_msg(num,"You're not the host of that game")
