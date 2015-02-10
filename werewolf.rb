@@ -7,7 +7,7 @@ belongs_to :session
 end
 class Session < ActiveRecord::Base
 has_many :players
-has_one :host, class_name: :player
+has_one :host, class_name: 'Player'
 
 def find_by_host_number(num)
 self.all.map{|x|x if x.host.number==num}.first
