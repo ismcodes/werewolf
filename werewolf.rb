@@ -27,7 +27,7 @@ post '/' do
 num = params[:From]
 body = params[:Body].downcase
 
-if body.includes? "join"
+if body.include? "join"
 
 player = Player.find(num)
 player ||= Player.create(phone_number:num)
@@ -41,7 +41,7 @@ else
 send_msg(num, "Could not join game with id of #{game_id}")
 end
 
-elsif body.includes? "host"
+elsif body.include? "host"
 
 s = Session.create(uuid:SecureRandom.uuid[0..5])
 player = Player.find(num)
@@ -51,14 +51,16 @@ s.host = player
 #send text with uuid
 send_msg(num, "Created new game with id of #{s.uuid}")
 
-elsif body.includes? "start"
-
-all_players = Session.find_by_host_phone(num).first.players
+elsif body.include? "start"
+s = Session.find_by_host_phone(num).first
+return send_msg(num,"You are not the host") unless s
+all_players = s.players
+return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size < 3
 special = [-1,-1,-1]
 3.times do |i|
 r = rand(all_players.count)
 
-while special.includes?(r)
+while special.include?(r)
 r = rand(all_players.count)
 end
 
@@ -84,7 +86,7 @@ send_msg(p.phone_number,character)
 
 end
 
-elsif body.includes? "end"
+elsif body.include? "end"
 
 game_id = body.split(" ")[1]
 
