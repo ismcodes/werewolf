@@ -36,9 +36,9 @@ game_id = body.split(" ")[1]
 Session.where(uuid:game_id).first.players << player
 
 if player.session
-send_msg(num, "Successfully joined game with #{session.players.size-1} other players".
+send_msg(num, "Successfully joined game with #{session.players.size-1} other players.")
 else
-send_msg(num, "Could not join game with id of #{game_id}"
+send_msg(num, "Could not join game with id of #{game_id}")
 end
 
 elsif body.includes? "host"
