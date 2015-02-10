@@ -50,7 +50,7 @@ send_msg(num, "Could not join game with id of #{game_id}")
 end
 
 elsif body.include? "status"
-s = Session.where(uuid:body.split(" ")[1])
+s = Session.where(uuid:body.split(" ")[1]).first
 if s
 send_msg(num,"#{s.players.size} players")
 else
@@ -71,7 +71,7 @@ elsif body.include? "start"
 s = Session.find_by_host_number(num)
 return send_msg(num,"You are not the host") unless s
 all_players = s.players
-return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size < 3
+return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if s.players.size+1 < 3
 special = [-1,-1,-1]
 3.times do |i|
 r = rand(all_players.count)
