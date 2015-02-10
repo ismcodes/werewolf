@@ -18,11 +18,11 @@ ActiveRecord::Schema.define(version: 20150209170156) do
 
   create_table "players", force: :cascade do |t|
     t.string  "phone_number"
-    t.integer "sessions_id"
+    t.integer "session_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "uuid"
+    t.string "uuid"
   end
 
 end
