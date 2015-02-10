@@ -9,7 +9,7 @@ class Session < ActiveRecord::Base
 has_many :players
 has_one :host, class_name: 'Player'
 
-def find_by_host_number(num)
+def self.find_by_host_number(num)
 self.all.map{|x|x if x.host.number==num}.first
 end
 
