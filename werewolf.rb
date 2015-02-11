@@ -75,7 +75,7 @@ post '/' do
     You have #{all_players.size}.") if all_players.size + 1 < 3
 
     special = [-1, -1, -1]
-    2.times do |i|
+    special.size.times do |i|
       r = rand(all_players.count)
       while special.include?(r)
         r = rand(all_players.count)
