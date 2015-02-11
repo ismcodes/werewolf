@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require 'securerandom'
+require 'faker'
 
 class Player < ActiveRecord::Base
   belongs_to :session
@@ -71,10 +72,10 @@ post '/' do
     all_players = session.players
     all_players << player # host can play too?
     return send_msg(num, "Must have at least 3 players.
-    You have #{all_players.size}.") if all_players.size < 3
+    You have #{all_players.size}.") if all_players.size + 1 < 3
 
-    special = [-1, -1]
-    special.size.times do |i|
+    special = [-1, -1, -1]
+    2.times do |i|
       r = rand(all_players.count)
       while special.include?(r)
         r = rand(all_players.count)
