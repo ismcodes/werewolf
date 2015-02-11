@@ -31,8 +31,8 @@ if body.include? "join"
 return send_msg(num, "no game id supplied") unless /join (\d|[a-z]){5}/ =~ body
 game_id = body.split(" ")[1]
 s=Session.where(uuid:game_id).first
-if s
-s.players << player
+if session
+session.players << player
 else
 return send_msg(num, "Could not join game with id of #{game_id}")
 end
@@ -69,8 +69,8 @@ return send_msg(num,"You are not the host") unless session.host = player
 all_players = session.players
 all_players<<player #host can play too?
 return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if all_players.size<3
-special = [-1,-1,-1]
-3.times do |i|
+special = [-1,-1]
+2.times do |i|
 r = rand(all_players.count)
 
 while special.include?(r)
