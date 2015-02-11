@@ -27,26 +27,21 @@ session = player.session
 
 if body == "hi"
 
-send_msg(num,"commands:\nhost\njoin\n<game_id>\nstatus\ngo\nfinished")
+send_msg(num,"commands:\nhost\njoin <game_id>\nstatus\ngo\nfinished")
 elsif body.include? "join"
 
 return send_msg(num, "no game id supplied") unless /join (\d|[a-z]){5}/ =~ body
 game_id = body.split(" ")[1]
 s=Session.where(uuid:game_id).first
-if session
-session.players << player
-else
-return send_msg(num, "Could not join game with id of #{game_id}")
-end
-
-if session
-if session.host != player
+if s
+if s.host != player
+s.players << player
 send_msg(num, "Successfully joined game with #{player.session.players.size-1} other players.")
 else
-send_msg(num, "Could not join game with id of #{game_id}")
+send_msg(num, "Already in game with #{player.session.players.size-1} other players.")
 end
 else
-send_msg(num, "Could not join game with id of #{game_id}")
+return send_msg(num, "Could not join game with id of #{game_id}")
 end
 
 elsif body.include? "status"
