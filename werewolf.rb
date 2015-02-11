@@ -35,7 +35,7 @@ post '/' do
 
     return send_msg(num, "no game id supplied") unless /join (\d|[a-z]){5}/ =~ body
     game_id = body.split(" ")[1]
-    s = Session.where(uuid:game_id).first
+    s = Session.where(uuid: game_id).first
     if s
       if s.host != player
         s.players << player
@@ -71,7 +71,7 @@ post '/' do
     all_players = session.players
     all_players << player # host can play too?
     return send_msg(num, "Must have at least 3 players.
-    You have #{all_players.size}.") if all_players.size<3
+    You have #{all_players.size}.") if all_players.size < 3
 
     special = [-1, -1]
     special.size.times do |i|
@@ -105,9 +105,9 @@ post '/' do
     end
 
 
-  # end cases
+    # end cases
   end
 
 
-# end routes
+  # end routes
 end
