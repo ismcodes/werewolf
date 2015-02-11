@@ -69,8 +69,8 @@ return send_msg(num,"You are not the host") unless session.host = player
 all_players = session.players
 all_players<<player #host can play too?
 return send_msg(num,"Must have at least 3 players. You have #{all_players.size}.") if all_players.size<3
-special = [-1,-1]
-2.times do |i|
+special = [-1,-1,-1]
+3.times do |i|
 r = rand(all_players.count)
 
 while special.include?(r)
