@@ -88,7 +88,7 @@ character = "Merlin the wizard (*.*)"
 elsif special[2]==i
 character = "Werewolf :> awoOooOOOO!"
 else
-character = "You are a #{Bazaar.adj} villager named #{Faker::Name.name}"
+character = "You are a QUAINT villager named #{Faker::Name.name}"
 end
 
 send_msg(p.phone_number,character)
