@@ -85,9 +85,9 @@ post '/' do
 
     all_players.each_with_index do |p,i|
       character = ""
-      if special[0]==i || special[1]==i
+      if special[0]==i 
         character = "Merlin the wizard (*.*)"
-      elsif special[2]==i
+      elsif special[1]==i || special[2]==i
         character = "Werewolf :> awoOooOOOO!"
       else
         character = "You are a QUAINT villager named #{Faker::Name.name}"
